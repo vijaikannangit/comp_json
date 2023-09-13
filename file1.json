@@ -1,0 +1,5 @@
+{
+    "name" : "Jane",
+    "email": "jane@email.com",
+    "friends" : ["John", "Mark", "Emily"]
+}
