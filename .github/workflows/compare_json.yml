@@ -17,6 +17,7 @@ jobs:
       
       - name: Run Python Script
         run: |
+          pip install --upgrade pip
           pip install deep-diff
           python src/comp_json_file.py
 
