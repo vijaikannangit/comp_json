@@ -18,16 +18,9 @@ jobs:
       
       - name: Run Python Script
         run: |
-          pip install --upgrade pip
-          pip install deep-diff
-          #python3 -m pip install --no-cache-dir -r requirements.txt
+          python3 -m pip install --no-cache-dir -r requirements.txt
           python src/comp_json_file.py
 
-      - name: Python Pylint Github Actions for Code Analysis
-        run: |
-            python -m pip install --upgrade pip
-            #pip install pylint==2.9.6
-            pip install pylint
             
       - name: Analysing the code with pylint
         run: |
