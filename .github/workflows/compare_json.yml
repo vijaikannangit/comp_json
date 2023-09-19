@@ -21,13 +21,5 @@ jobs:
           python3 -m pip install --no-cache-dir -r requirements.txt
           python src/comp_json_file.py
 
-            
-      - name: Analysing the code with pylint
-        run: |
-           #find . -name'comp_json_file.py' -exec pylint {} \;
-           #find . -name '*.py' -exec pylint {} \;
-           pylint src/comp_json_file.py
-           #pylint . --reports=y --score n
-           #pylint --version
-                   
+                  
       - run: 'echo "This job status is ${{ job.status }}."'
