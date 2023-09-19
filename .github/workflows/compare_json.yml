@@ -14,12 +14,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
            python-version: '3.10'
-           
-      
+              
       - name: Run Python Script
         run: |
           python3 -m pip install --no-cache-dir -r requirements.txt
           python src/comp_json_file.py
-
-                  
+                
       - run: 'echo "This job status is ${{ job.status }}."'
