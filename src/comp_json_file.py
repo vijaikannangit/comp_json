@@ -3,8 +3,8 @@ from deepdiff import DeepDiff
 import json, os
 
 
-json_data_file1 = "file3.json"
-json_data_file2 = "file1.json"
+json_data_file1 = "src/file3.json"
+json_data_file2 = "src/file1.json"
 
 def json_fileexist_convto_dict(file_name):
     """
