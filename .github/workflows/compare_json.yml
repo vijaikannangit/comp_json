@@ -14,8 +14,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
            python-version: '3.10'
-           
-      - run: python comp_json_file.py
+      
+      - name: Run Python Script
+        run: python src/comp_json_file.py
 
       - name: Python Pylint Github Actions for Code Analysis
         run: |
