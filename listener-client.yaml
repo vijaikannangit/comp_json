@@ -1,0 +1,91 @@
+name: Folder Listener
+on:
+push:
+branches:
+- master # Can be changed to master
+
+
+
+jobs:
+folder-listener:
+runs-on: ubuntu-latest
+env:
+LISTENING_FOLDER : api/app/controllers
+NOTIFICATION_SMTP_USER: ${{secrets.SMTP_USER}}
+NOTIFICATION_SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD}}
+NOTIFICATION_FROM: ALVDIGITAL Systems (API)
+NOTIFICATION_SUBJECT: ALV API Controllers-GitHub Updated
+NOTIFICATION_TO_DEFAULT: info@alvdigital.com
+NOTIFICATION_EMAIL_RECIPIENTS: patrick.thomas@alvdigital.com,goran.pesic@alvdigital.com,andre@kicktheflame.com
+steps:
+- uses: actions/checkout@v3
+
+
+
+- name: Get changed files in ${{ env.LISTENING_FOLDER }}
+id: changed-files-specific
+uses: tj-actions/changed-files@v37
+with:
+files: ${{ env.LISTENING_FOLDER }}
+
+
+
+- name: List all changed files in ${{ env.LISTENING_FOLDER }}
+id: change-info
+if: steps.changed-files-specific.outputs.any_changed == 'true'
+run: |
+files_changed_html='<ol type="1">'
+for file in ${{ steps.changed-files-specific.outputs.all_changed_files }}; do
+echo "$file was changed"
+commit_info=$(git log -1 --oneline ${file})
+files_changed_html="${files_changed_html}<li>${file}<br><i>Commit</i>: ${commit_info}</li>"
+done
+files_changed_html="${files_changed_html}</ol>"
+echo "files_changed_html=$files_changed_html" >> $GITHUB_OUTPUT
+
+
+
+- name: Send notification
+if: steps.changed-files-specific.outputs.any_changed == 'true'
+uses: dawidd6/action-send-mail@v3
+with:
+server_address: smtp.gmail.com
+# Server port, default 25:
+server_port: 465
+# Optional whether this connection use TLS (default is true if server_port is 465)
+secure: true
+# Optional (recommended) mail server username:
+username: ${{env.NOTIFICATION_SMTP_USER}}
+# Optional (recommended) mail server password:
+password: ${{env.NOTIFICATION_SMTP_PASSWORD}}
+# Required mail subject:
+subject: ${{ env.NOTIFICATION_SUBJECT }}
+# Required recipients addresses:
+to: ${{ env.NOTIFICATION_TO_DEFAULT }}
+# Optional blind carbon copy recipients:
+bcc: ${{ env.NOTIFICATION_EMAIL_RECIPIENTS }}
+# Required sender full name (address can be skipped):
+from: ${{ env.NOTIFICATION_FROM }}
+# Optional plain body:
+html_body: |
+<b>Files changed: ${{ steps.changed-files-specific.outputs.all_changed_files_count }}</b>
+<hr>
+${{ steps.change-info.outputs.files_changed_html }}
+<br>
+This is an automated email. If you have questions about the above, please email to service@alvdigital.com
+# Optional priority: 'high', 'normal' (default) or 'low'
+priority: high
+# Optional HTML body read from file:
+#html_body: file://README.html
+# Optional carbon copy recipients:
+#cc: service@alvdigital.com,kumvijaya@gmail.com
+# Optional recipient of the email response:
+#reply_to: service@alvdigital.com,kumvijaya@gmail.com
+# Optional Message ID this message is replying to:
+#in_reply_to: service@alvdigital.com,kumvijaya@gmail.com
+# Optional unsigned/invalid certificates allowance:
+#ignore_cert: true
+# Optional converting Markdown to HTML (set content_type to text/html too):
+# convert_markdown: true
+# Optional attachments:
+#attachments: attachments.zip,git.diff,./dist/static/*.js
